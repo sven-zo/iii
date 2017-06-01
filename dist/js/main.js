@@ -1,78 +1,80 @@
-var Cat = (function () {
-    function Cat(stage, renderer) {
-        this.stage = stage;
-        this.renderer = renderer;
-        this.loadAssets();
-    }
-    Cat.prototype.loadAssets = function () {
-        this.texture = PIXI.utils.TextureCache["iii/assets/cat.png"];
-        this.sprite = new PIXI.Sprite(this.texture);
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
-    return Cat;
+})();
+var domObj = (function () {
+    function domObj(name, obj) {
+        this.name = name;
+        this.obj = obj;
+        this.div = document.createElement('img');
+        this.div.className = 'iii-' + this.name;
+        this.div.width = this.obj.width;
+        this.div.height = this.obj.height;
+        this.div.src = this.obj.image;
+        document.body.appendChild(this.div);
+    }
+    domObj.prototype.tick = function () {
+        this.div.style.transform = "translate(" + this.obj.x + "px, " + this.obj.y + "px)";
+    };
+    return domObj;
 }());
 var Game = (function () {
-    function Game() {
-        var _this = this;
-        console.log('[GAME] Created. Creating renderer.');
-        this.render = new Renderer();
-        PIXI.loader
-            .add("/iii/assets/cat.png")
-            .load(function () { return _this.createCat; });
+    function Game(renderDom) {
+        if (renderDom === void 0) { renderDom = true; }
+        this._renderDom = true;
+        this.allObjects = [];
+        this._renderDom = renderDom;
+        this.allObjects.push(new gameObj(this, 'logo', 200, 200, 80, 80, '/iii/assets/cat.png'));
+        requestAnimationFrame(this.gameLoop.bind(this));
     }
-    Game.prototype.createCat = function () {
-        var cat = new Cat(this.render.stage, this.render.renderer);
-        this.render.stage.addChild(cat.sprite);
-        this.render.renderer(this.render.stage);
+    Object.defineProperty(Game.prototype, "renderDom", {
+        get: function () {
+            return this._renderDom;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Game.prototype.gameLoop = function () {
+        this.allObjects.forEach(function (element) {
+            element.tick();
+        });
+        requestAnimationFrame(this.gameLoop.bind(this));
     };
     return Game;
 }());
 window.addEventListener('load', function (e) {
     new Game();
 });
-var Renderer = (function () {
-    function Renderer() {
-        console.log('[RENDER] Created. Setting up stage.');
-        this.setUpRender();
+var gameObj = (function () {
+    function gameObj(g, name, x, y, width, height, image) {
+        this.g = g;
+        this.name = name;
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        this.image = image;
+        this.createNode();
     }
-    Renderer.prototype.setUpRender = function () {
-        var type = 'WebGL';
-        if (!PIXI.utils.isWebGLSupported()) {
-            type = 'canvas';
-        }
-        PIXI.utils.sayHello(type);
-        var options = {
-            'width': window.innerWidth,
-            'height': window.innerHeight,
-            'transparent': false,
-            'autoResize': true,
-            'antialias': true,
-            'resolution': 1
-        };
-        this._renderer = PIXI.autoDetectRenderer(options);
-        document.body.appendChild(this._renderer.view);
-        this._stage = new PIXI.Container();
-        this._renderer.render(this.stage);
+    gameObj.prototype.createNode = function () {
+        this.d = new domObj(this.name, this);
     };
-    Object.defineProperty(Renderer.prototype, "stage", {
-        get: function () {
-            return this._stage;
-        },
-        set: function (stage) {
-            this._stage = stage;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Renderer.prototype, "renderer", {
-        get: function () {
-            return this._renderer;
-        },
-        set: function (renderer) {
-            this._renderer = renderer;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    return Renderer;
+    gameObj.prototype.tick = function () {
+        this.d.tick();
+    };
+    return gameObj;
 }());
+var Logo = (function (_super) {
+    __extends(Logo, _super);
+    function Logo(g, x, y) {
+        return _super.call(this, g, x, y, 720, 720, '/iii/iiilogo.png') || this;
+    }
+    return Logo;
+}(gameObj));
 //# sourceMappingURL=main.js.map
