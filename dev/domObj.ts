@@ -14,7 +14,7 @@
     this.div.height = this.obj.height
     this.div.src = this.obj.image
 
-    document.body.appendChild(this.div)
+    document.getElementsByTagName('domrender')[0].appendChild(this.div)
   }
 
   tick() {

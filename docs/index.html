@@ -8,6 +8,7 @@
       body {
         margin: 0;
         padding: 0;
+        background-color: black;
       }
       body * {
         position: absolute;
@@ -16,33 +17,10 @@
         box-sizing: border-box;
         background-repeat: no-repeat;
       }
-
-      @keyframes pulse {
-  from {
-    transform: scale3d(1, 1, 1);
-  }
-
-  50% {
-    transform: scale3d(1.05, 1.05, 1.05);
-  }
-
-  to {
-    transform: scale3d(1, 1, 1);
-  }
-}
-
-.pulse {
-  animation-name: pulse;
-}
-
-.animated {
-  animation-duration: 1s;
-  animation-fill-mode: both;
-}
-
-.animated.infinite {
-  animation-iteration-count: infinite;
-}
+      domrender {
+        min-width: 1280px;
+        min-height: 720px;
+      }
     </style>
   </head>
   <body>

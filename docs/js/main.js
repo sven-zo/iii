@@ -7,7 +7,7 @@ class DomObj {
         this.div.width = this.obj.width;
         this.div.height = this.obj.height;
         this.div.src = this.obj.image;
-        document.body.appendChild(this.div);
+        document.getElementsByTagName('domrender')[0].appendChild(this.div);
     }
     tick() {
         this.div.width = this.obj.width;
@@ -23,10 +23,17 @@ class Game {
         this._resources = PIXI.loader.resources;
         this._renderDom = renderDom;
         if (!renderDom) {
+            console.log('[Game] Starting game in WebGL/Canvas mode');
             this.setupPIXI();
         }
         else {
-            this.addObject(new Logo(this, window.innerWidth / 2 - window.innerHeight / 8, window.innerHeight / 2 - window.innerHeight / 4));
+            console.log('[Game] Starting game in DOM mode');
+            let domrender = document.createElement('domrender');
+            domrender.style.display = 'block';
+            domrender.style.position = 'absolute';
+            domrender.style.backgroundColor = 'white';
+            document.body.appendChild(domrender);
+            this.addObject(new Logo(this));
             requestAnimationFrame(this.gameLoop.bind(this));
         }
     }
@@ -56,8 +63,8 @@ class Game {
     }
     setupPIXI() {
         let options = {
-            'width': window.innerWidth,
-            'height': window.innerHeight,
+            'width': 1280,
+            'height': 720,
             'transparent': false,
             'autoResize': true,
             'antialias': true,
@@ -65,15 +72,23 @@ class Game {
             'backgroundColor': 0xffffff
         };
         this._renderer = PIXI.autoDetectRenderer(options);
+        if (this._renderer instanceof PIXI.WebGLRenderer) {
+            console.log('[Game] WebGL supported! Started in WebGL mode.');
+        }
+        else {
+            console.log('[Game] Started in Canvas mode.');
+        }
         document.body.appendChild(this._renderer.view);
         this._stage = new PIXI.Container();
         this._renderer.render(this._stage);
         this._loader
             .add("assets/iiilogo.png")
+            .add("assets/press_start.png")
             .load(this.setupPIXIAssetsLoaded.bind(this));
     }
     setupPIXIAssetsLoaded() {
-        this.addObject(new Logo(this, window.innerWidth / 2 - window.innerHeight / 8, window.innerHeight / 2 - window.innerHeight / 4));
+        this.addObject(new Logo(this));
+        this.addObject(new PressStart(this));
         requestAnimationFrame(this.gameLoop.bind(this));
     }
 }
@@ -154,19 +169,29 @@ class SpriteObj {
     tick() {
         this.sprite.width = this.obj.width;
         this.sprite.height = this.obj.height;
+        this.sprite.x = this.obj.x;
+        this.sprite.y = this.obj.y;
     }
 }
 class Logo extends GameObj {
-    constructor(g, x, y) {
-        super(g, 'logo', x, y, window.innerHeight / 4, window.innerHeight / 4, 'assets/iiilogo.png');
+    constructor(g) {
+        super(g, 'logo', window.innerWidth / 2, 100, window.innerHeight / 4, window.innerHeight / 4, 'assets/iiilogo.png');
     }
     tick() {
         this.correctPosition();
         super.tick();
     }
     correctPosition() {
-        this.width = window.innerHeight / 4;
-        this.height = window.innerHeight / 4;
+        this.width = 1280 / 4;
+        this.height = 1280 / 4;
+        this.x = 1280 / 2 - this.width * 0.5;
+    }
+}
+class MainMenu extends GameObj {
+}
+class PressStart extends GameObj {
+    constructor(g) {
+        super(g, 'PressStart', 0, 0, 580, 78, 'assets/press_start.png');
     }
 }
 //# sourceMappingURL=main.js.map

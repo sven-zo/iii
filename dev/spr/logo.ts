@@ -1,7 +1,7 @@
 class Logo extends GameObj {
 
-  constructor (g: Game, x: number, y: number) {
-    super(g, 'logo', x, y, window.innerHeight / 4, window.innerHeight / 4, 'assets/iiilogo.png')
+  constructor (g: Game) {
+    super(g, 'logo', window.innerWidth / 2, 100, window.innerHeight / 4, window.innerHeight / 4, 'assets/iiilogo.png')
   }
 
   tick () {
@@ -10,7 +10,8 @@ class Logo extends GameObj {
   }
 
   private correctPosition (): void {
-    this.width = window.innerHeight / 4
-    this.height = window.innerHeight / 4
+    this.width = 1280 / 4
+    this.height = 1280 / 4
+    this.x = 1280 / 2 - this.width * 0.5
   }
 }
