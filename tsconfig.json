@@ -2,7 +2,7 @@
     "compilerOptions": {
         "sourceMap":  true,
         "removeComments": true,
-        "target":"es5",
+        "target":"es6",
         "out": "dist/js/main.js"
     },
     "exclude": [

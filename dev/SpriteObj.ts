@@ -1,0 +1,25 @@
+class SpriteObj {
+
+  private sprite: PIXI.Sprite
+  private obj: GameObj
+
+  constructor (obj: GameObj) {
+    this.obj = obj
+    //console.log('h', obj.g)
+    //console.log('r', obj.g.resources)
+    //console.log('s', obj.image)
+    this.sprite = new PIXI.Sprite(
+      obj.g.resources[`${this.obj.image}`].texture
+    )
+    this.sprite.x = this.obj.x
+    this.sprite.y = this.obj.y
+    this.sprite.width = this.obj.width
+    this.sprite.height = this.obj.height
+    obj.g.stage.addChild(this.sprite)
+  }
+
+  tick() {
+    this.sprite.width = this.obj.width
+    this.sprite.height = this.obj.height
+  }
+}

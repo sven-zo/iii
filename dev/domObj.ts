@@ -1,8 +1,8 @@
- class domObj {
+ class DomObj {
 
-  obj: gameObj
-  name: string
-  div: HTMLImageElement
+  private obj: GameObj
+  private name: string
+  private div: HTMLImageElement
 
   constructor (name, obj) {
     this.name = name
@@ -18,6 +18,8 @@
   }
 
   tick() {
+    this.div.width = this.obj.width
+    this.div.height = this.obj.height
     this.div.style.transform = "translate("+this.obj.x+"px, "+this.obj.y+"px)"
   }
 }
