@@ -1,4 +1,4 @@
-/// <reference path="../vendor/pixi.js.d.ts"/>
+/// <reference path="../docs/vendor/pixi.js.d.ts"/>
 
 class Game {
 

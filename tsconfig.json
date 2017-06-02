@@ -3,9 +3,9 @@
         "sourceMap":  true,
         "removeComments": true,
         "target":"es6",
-        "out": "dist/js/main.js"
+        "out": "docs/js/main.js"
     },
     "exclude": [
-        "dist"
+        "docs"
     ]
 }
