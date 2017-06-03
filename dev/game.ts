@@ -78,8 +78,10 @@ class Game {
       this._renderer.render(this._stage)
 
       this._loader
-      .add("assets/iiilogo.png")
-      .add("assets/press_start.png")
+      .add([
+        'assets/iiilogo.png',
+        'assets/press_start.png'
+      ])
       .load(this.setupPIXIAssetsLoaded.bind(this))
   }
   private setupPIXIAssetsLoaded() {
@@ -88,7 +90,3 @@ class Game {
     requestAnimationFrame( this.gameLoop.bind(this) )
   }
 }
-
-window.addEventListener('load', function (e) {
-  new Game(false) //false voor webgl/canvas - true voor DOM
-})
