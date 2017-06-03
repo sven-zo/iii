@@ -40,6 +40,9 @@ class GameObj {
   get g(): Game {
     return this._g
   }
+  set g(g: Game) {
+    this._g = g
+  }
 
   /**
    * A game object.
@@ -50,7 +53,7 @@ class GameObj {
    * @param height Height of the image
    * @param image The image
    */
-  constructor (g: Game, name: string, x: number, y: number, width: number, height: number, image: string) {
+  constructor (g: Game, name: string, x: number = 0, y: number = 0, width: number = 1, height: number = 1, image: string = 'assets/o.png') {
     this._g = g
     this.name = name
     this._x = x
@@ -72,6 +75,14 @@ class GameObj {
 
   private createSprite(): void {
     this.p = new SpriteObj(this)
+  }
+
+  public delete(): void {
+    if (this._g.renderDom) {
+      this.d.delete()
+    } else {
+      this.p.delete()
+    }
   }
 
   tick() {

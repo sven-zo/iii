@@ -14,6 +14,9 @@ class DomObj {
         this.div.height = this.obj.height;
         this.div.style.transform = "translate(" + this.obj.x + "px, " + this.obj.y + "px)";
     }
+    delete() {
+        document.getElementsByTagName('domrender')[0].removeChild(this.div);
+    }
 }
 class Game {
     constructor(renderDom = true) {
@@ -33,7 +36,7 @@ class Game {
             domrender.style.position = 'absolute';
             domrender.style.backgroundColor = 'white';
             document.body.appendChild(domrender);
-            this.addObject(new Logo(this));
+            this.addObject(new MainMenu(this));
             requestAnimationFrame(this.gameLoop.bind(this));
         }
     }
@@ -84,16 +87,22 @@ class Game {
         this._loader
             .add([
             'assets/iiilogo.png',
-            'assets/press_start.png'
+            'assets/press_start.png',
+            'assets/o.png',
+            'assets/block.png'
         ])
             .load(this.setupPIXIAssetsLoaded.bind(this));
     }
     setupPIXIAssetsLoaded() {
-        this.addObject(new Logo(this));
-        this.addObject(new PressStart(this));
+        this.addObject(this.mainMenu = new MainMenu(this));
         requestAnimationFrame(this.gameLoop.bind(this));
     }
+    runLevel(level) {
+        this.mainMenu.delete();
+        this.currentLevel = new Level(1);
+    }
 }
+var forceDOM = false;
 var autoStart = true;
 var useDOM = true;
 var button = document.createElement('button');
@@ -153,7 +162,12 @@ function startGame() {
     document.body.removeChild(webGlMessage);
     document.body.removeChild(canvasMessage);
     document.body.removeChild(domMessage);
-    new Game(useDOM);
+    if (forceDOM) {
+        new Game(true);
+    }
+    else {
+        new Game(useDOM);
+    }
 }
 class GameObj {
     get x() {
@@ -186,7 +200,10 @@ class GameObj {
     get g() {
         return this._g;
     }
-    constructor(g, name, x, y, width, height, image) {
+    set g(g) {
+        this._g = g;
+    }
+    constructor(g, name, x = 0, y = 0, width = 1, height = 1, image = 'assets/o.png') {
         this._g = g;
         this.name = name;
         this._x = x;
@@ -207,6 +224,14 @@ class GameObj {
     createSprite() {
         this.p = new SpriteObj(this);
     }
+    delete() {
+        if (this._g.renderDom) {
+            this.d.delete();
+        }
+        else {
+            this.p.delete();
+        }
+    }
     tick() {
         if (this._g.renderDom) {
             this.d.tick();
@@ -214,6 +239,10 @@ class GameObj {
         else {
             this.p.tick();
         }
+    }
+}
+class Level {
+    constructor(num) {
     }
 }
 class SpriteObj {
@@ -232,6 +261,9 @@ class SpriteObj {
         this.sprite.x = this.obj.x;
         this.sprite.y = this.obj.y;
     }
+    delete() {
+        this.obj.g.stage.removeChild(this.sprite);
+    }
 }
 class Logo extends GameObj {
     constructor(g) {
@@ -248,12 +280,29 @@ class Logo extends GameObj {
     }
 }
 class MainMenu extends GameObj {
+    constructor(g) {
+        super(g, 'main-menu');
+        this.g = g;
+        g.addObject(this.logo = new Logo(g));
+        g.addObject(this.pressStart = new PressStart(g));
+        window.addEventListener('keydown', (event) => this.startLevel(event));
+    }
+    startLevel(event) {
+        this.g.runLevel(1);
+    }
+    delete() {
+        this.logo.delete();
+        this.pressStart.delete();
+    }
 }
 class PressStart extends GameObj {
     constructor(g) {
-        super(g, 'PressStart', 12, 1180, 580, 78, 'assets/press_start.png');
+        super(g, 'PressStart', 380, 500, 580, 78, 'assets/press_start.png');
     }
     tick() {
+        this.x = 380;
+        this.y = 500;
+        super.tick();
     }
 }
 //# sourceMappingURL=main.js.map

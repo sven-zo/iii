@@ -8,6 +8,8 @@ class Game {
   private _stage: PIXI.Container
   private _loader: PIXI.loaders.Loader = PIXI.loader
   private _resources: PIXI.loaders.ResourceDictionary = PIXI.loader.resources
+  private mainMenu: MainMenu
+  private currentLevel: Level
 
   get stage(): PIXI.Container {
     return this._stage
@@ -38,7 +40,7 @@ class Game {
       domrender.style.position = 'absolute'
       domrender.style.backgroundColor = 'white'
       document.body.appendChild(domrender)
-      this.addObject( new Logo(this) )
+      this.addObject( new MainMenu(this) )
       requestAnimationFrame( this.gameLoop.bind(this) )
     }
   }
@@ -80,13 +82,19 @@ class Game {
       this._loader
       .add([
         'assets/iiilogo.png',
-        'assets/press_start.png'
+        'assets/press_start.png',
+        'assets/o.png',
+        'assets/block.png'
       ])
       .load(this.setupPIXIAssetsLoaded.bind(this))
   }
   private setupPIXIAssetsLoaded() {
-    this.addObject( new Logo(this) )
-    this.addObject( new PressStart(this) )
+    this.addObject( this.mainMenu = new MainMenu(this) )
     requestAnimationFrame( this.gameLoop.bind(this) )
+  }
+
+  public runLevel(level) {
+    this.mainMenu.delete()
+    this.currentLevel = new Level(1)
   }
 }

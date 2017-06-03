@@ -17,9 +17,13 @@
     document.getElementsByTagName('domrender')[0].appendChild(this.div)
   }
 
-  tick() {
+  public tick () {
     this.div.width = this.obj.width
     this.div.height = this.obj.height
     this.div.style.transform = "translate("+this.obj.x+"px, "+this.obj.y+"px)"
+  }
+
+  public delete () {
+    document.getElementsByTagName('domrender')[0].removeChild(this.div)
   }
 }

@@ -1,3 +1,4 @@
+var forceDOM = false
 var autoStart = true
 var useDOM = true
 var button = document.createElement('button')
@@ -59,5 +60,9 @@ function startGame () {
   document.body.removeChild(webGlMessage)
   document.body.removeChild(canvasMessage)
   document.body.removeChild(domMessage)
-  new Game(useDOM)
+  if (forceDOM) {
+    new Game(true)
+  } else {
+    new Game(useDOM)
+  }
 }

@@ -15,10 +15,14 @@ class SpriteObj {
     obj.g.stage.addChild(this.sprite)
   }
 
-  tick() {
+  public tick() {
     this.sprite.width = this.obj.width
     this.sprite.height = this.obj.height
     this.sprite.x = this.obj.x
     this.sprite.y = this.obj.y
+  }
+
+  public delete () {
+    this.obj.g.stage.removeChild(this.sprite)
   }
 }
