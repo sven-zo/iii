@@ -1,7 +1,7 @@
 class Logo extends GameObj {
 
   constructor (g: Game) {
-    super(g, 'logo', window.innerWidth / 2, 100, window.innerHeight / 4, window.innerHeight / 4, 'assets/iiilogo.png')
+    super(g, 'logo', 0, 100, 1280/4, 1280/4, 'assets/iiilogo.png')
   }
 
   tick () {

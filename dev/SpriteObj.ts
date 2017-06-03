@@ -5,9 +5,6 @@ class SpriteObj {
 
   constructor (obj: GameObj) {
     this.obj = obj
-    //console.log('h', obj.g)
-    //console.log('r', obj.g.resources)
-    //console.log('s', obj.image)
     this.sprite = new PIXI.Sprite(
       obj.g.resources[`${this.obj.image}`].texture
     )

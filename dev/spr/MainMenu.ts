@@ -1,3 +1,3 @@
 class MainMenu extends GameObj {
-
+  
 }

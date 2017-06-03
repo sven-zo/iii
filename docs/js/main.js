@@ -94,7 +94,10 @@ class Game {
         requestAnimationFrame(this.gameLoop.bind(this));
     }
 }
+var autoStart = true;
 var useDOM = true;
+var button = document.createElement('button');
+button.innerHTML = 'Wait...';
 var windowSizeMessage = document.createElement('p');
 windowSizeMessage.innerHTML = 'Checking window size...';
 var webGlMessage = document.createElement('p');
@@ -110,6 +113,7 @@ window.addEventListener('load', function (e) {
     document.body.appendChild(domMessage);
     if (window.innerWidth < 1280 || window.innerHeight < 720) {
         windowSizeMessage.innerHTML = 'Your window size is too small to play the game.';
+        autoStart = false;
     }
     else {
         windowSizeMessage.innerHTML = 'Your window size is perfect.';
@@ -122,6 +126,7 @@ window.addEventListener('load', function (e) {
     }
     else {
         webGlMessage.innerHTML = 'It seems like your browser does not support WebGl.';
+        autoStart = false;
     }
     if (!!document.createElement("canvas").getContext) {
         canvasMessage.innerHTML = 'Yay! Your browser supports Canvas!';
@@ -133,18 +138,23 @@ window.addEventListener('load', function (e) {
     if (!useDOM) {
         domMessage.innerHTML = 'The fastest available renderer will be used.';
     }
-    let button = document.createElement('button');
-    button.innerHTML = 'Start game!';
-    button.addEventListener('click', function (e) {
-        new Game(useDOM);
-        document.body.removeChild(button);
-        document.body.removeChild(windowSizeMessage);
-        document.body.removeChild(webGlMessage);
-        document.body.removeChild(canvasMessage);
-        document.body.removeChild(domMessage);
-    });
     document.body.appendChild(button);
+    if (autoStart) {
+        startGame();
+    }
+    else {
+        button.innerHTML = 'Start game! (You should fix these things first for an optimal experience!)';
+        button.addEventListener('click', startGame);
+    }
 });
+function startGame() {
+    document.body.removeChild(button);
+    document.body.removeChild(windowSizeMessage);
+    document.body.removeChild(webGlMessage);
+    document.body.removeChild(canvasMessage);
+    document.body.removeChild(domMessage);
+    new Game(useDOM);
+}
 class GameObj {
     get x() {
         return this._x;
@@ -225,7 +235,7 @@ class SpriteObj {
 }
 class Logo extends GameObj {
     constructor(g) {
-        super(g, 'logo', window.innerWidth / 2, 100, window.innerHeight / 4, window.innerHeight / 4, 'assets/iiilogo.png');
+        super(g, 'logo', 0, 100, 1280 / 4, 1280 / 4, 'assets/iiilogo.png');
     }
     tick() {
         this.correctPosition();
@@ -241,7 +251,9 @@ class MainMenu extends GameObj {
 }
 class PressStart extends GameObj {
     constructor(g) {
-        super(g, 'PressStart', 0, 0, 580, 78, 'assets/press_start.png');
+        super(g, 'PressStart', 12, 1180, 580, 78, 'assets/press_start.png');
+    }
+    tick() {
     }
 }
 //# sourceMappingURL=main.js.map

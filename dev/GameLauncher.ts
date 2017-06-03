@@ -1,4 +1,7 @@
+var autoStart = true
 var useDOM = true
+var button = document.createElement('button')
+button.innerHTML = 'Wait...'
 var windowSizeMessage = document.createElement('p')
 windowSizeMessage.innerHTML = 'Checking window size...'
 var webGlMessage = document.createElement('p')
@@ -16,6 +19,7 @@ window.addEventListener('load', function (e) {
   //Detect window size
   if (window.innerWidth < 1280 || window.innerHeight < 720) {
     windowSizeMessage.innerHTML = 'Your window size is too small to play the game.'
+    autoStart = false
   } else {
     windowSizeMessage.innerHTML = 'Your window size is perfect.'
   }
@@ -27,6 +31,7 @@ window.addEventListener('load', function (e) {
     useDOM = false
   } else {
     webGlMessage.innerHTML = 'It seems like your browser does not support WebGl.'
+    autoStart = false
   }
   //Detect Canvas
   if (!!document.createElement("canvas").getContext) {
@@ -39,15 +44,20 @@ window.addEventListener('load', function (e) {
   if (!useDOM) {
     domMessage.innerHTML = 'The fastest available renderer will be used.'
   }
-  let button = document.createElement('button')
-  button.innerHTML = 'Start game!'
-  button.addEventListener('click', function (e) {
-    new Game(useDOM)
-    document.body.removeChild(button)
-    document.body.removeChild(windowSizeMessage)
-    document.body.removeChild(webGlMessage)
-    document.body.removeChild(canvasMessage)
-    document.body.removeChild(domMessage)
-  })
   document.body.appendChild(button)
+  if (autoStart) {
+    startGame()
+  } else { 
+    button.innerHTML = 'Start game! (You should fix these things first for an optimal experience!)'
+    button.addEventListener('click', startGame)
+  }
 })
+
+function startGame () {
+  document.body.removeChild(button)
+  document.body.removeChild(windowSizeMessage)
+  document.body.removeChild(webGlMessage)
+  document.body.removeChild(canvasMessage)
+  document.body.removeChild(domMessage)
+  new Game(useDOM)
+}
