@@ -46,8 +46,6 @@ class Game {
     // Register keyboard event
     window.addEventListener('keydown', (event: KeyboardEvent) => this.keyboardEvent(event) )
 
-    //something.addEventListener('click', (event: MouseEvent) => this.callback(event) )
-
     // Set up renderers
     if (! renderDom) {
       console.log('[Game] Starting game in WebGL/Canvas mode')
@@ -65,42 +63,24 @@ class Game {
   }
 
   private gameLoop(): void {
-    //console.log(this.allObjects)
     // Tick elements
     this.allObjects.forEach(element => {
       element.tick()
     })
     // Collide elements
-    // [[[ AL die comments komen omdat ik heel veel moeite had met collission >_< ]]]
-    //for(let i: number = 0; i < this.allObjects.length; i++) {
-    //  for(let j: number = 0; j < this.allObjects.length; j++) {
-    //    if(! i === j) {
-    //      if( this.hasOverlap(this.allObjects[i], this.allObjects[j]) ) {
-    //        this.allObjects[i].collide()
-    //      }
-    //    }
-    //  }
-    //}
+
     // Check voor player collision als de game in level mode is
     if (this._state === 'level') {
       for (let i: number = 0; i < this.allObjects.length; i++) {
-        //if (! i === 103) {
-        //  if (! this.player.y + this.player.height >= this.allObjects.y ) {
-        //    console.log('collide')
-        //  }
-        //}
         if (this.allObjects[i].name === 'player') {
           //do nothing
         } else {
-          //console.log(this.player.y + this.player.height)
-          //console.log('HELP', this.player.y + this.player.height >= this.allObjects[i].y)
           if (this.hasOverlap(this.player, this.allObjects[i]) ) {
             this.player.collide()
             if ( this.allObjects[i].name === 'death-block' ) {
               this.player.gameOverScreen()
             }
           }
-          //console.log( '?', this.hasOverlap(this.player, this.allObjects[i]) )
         }
       }
     }
@@ -113,8 +93,6 @@ class Game {
   }
 
   private keyboardEvent (event: KeyboardEvent): void {
-    //console.log('key pressed', event.key)
-    //console.log('state', this._state)
     switch (event.key) {
       case ' ':
         if (this._state === 'mainmenu') {
@@ -183,7 +161,6 @@ class Game {
 
   public runLevel(level) {
     this.mainMenu.delete()
-    //this.currentLevel = this.addObject( new Level(this, 1) )
     this.addObject( new Level(this, level) )
   }
 

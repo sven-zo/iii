@@ -11,7 +11,6 @@ class Block extends GameObj {
     if (this.x < 0 - this.width) {
       super.delete()
     }
-    //let targetX = this.x - this.leftSpeed + this.rightSpeed
     super.tick()
   }
 

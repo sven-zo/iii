@@ -532,10 +532,6 @@ var Player = (function (_super) {
     Player.prototype.collide = function () {
         this.Yspeed = 0;
     };
-    Player.prototype.collideUpDown = function () {
-    };
-    Player.prototype.collideRight = function () {
-    };
     Player.prototype.jump = function () {
         if (this.Yspeed === 0) {
             this.audio.play();

@@ -13,14 +13,6 @@ class Player extends GameObj {
     this.Yspeed = 0
   }
 
-  private collideUpDown () {
-
-  }
-
-  private collideRight () {
-    //game over
-  }
-
   private jump () {
     if (this.Yspeed === 0) { 
       this.audio.play()

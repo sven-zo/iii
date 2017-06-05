@@ -42,11 +42,10 @@ class Level extends GameObj {
   }
 
   private constructLevel() {
-    if (this.num === 1) {
+    if (this.num === 1) { // Debug level
       this.speed = 20
       this.addObj(new Block(this.g, 100, 620, 1080, 100, this.speed))
       this.addObj(new Block(this.g, 1180, 610, 1080, 110, this.speed))
-      // om de game af te krijgen zou ik voor nu gewoon een score attack game maken waarbij je (gewoon optijd van poortjes moet wisselen) en springen
       this.levelConstructed = true
     } else if (this.num === -1) { //LEVEL GEN MODE ACTIVATE
       this.speed = 10
@@ -110,6 +109,7 @@ class Level extends GameObj {
       }
 
       //add finish
+      //(er is nog geen finish... oeps)
 
       //add player
       this.g.player = new Player(this.g)
