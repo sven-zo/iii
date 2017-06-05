@@ -89,10 +89,34 @@ var Game = (function () {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(Game.prototype, "player", {
+        get: function () {
+            return this._player;
+        },
+        set: function (player) {
+            this._player = player;
+        },
+        enumerable: true,
+        configurable: true
+    });
     Game.prototype.gameLoop = function () {
         this.allObjects.forEach(function (element) {
             element.tick();
         });
+        if (this._state === 'level') {
+            for (var i = 0; i < this.allObjects.length; i++) {
+                if (this.allObjects[i].name === 'player') {
+                }
+                else {
+                    if (this.hasOverlap(this.player, this.allObjects[i])) {
+                        this.player.collide();
+                        if (this.player.x + this.player.width > this.allObjects[i].x) {
+                            console.log('boem');
+                        }
+                    }
+                }
+            }
+        }
         if (!this._renderDom) {
             this._renderer.render(this._stage);
         }
@@ -106,6 +130,18 @@ var Game = (function () {
                 if (this._state === 'mainmenu') {
                     this.mainMenu.startLevel();
                 }
+                else if (this._state === 'level') {
+                    this.player.jump();
+                }
+                break;
+            case 'd':
+                console.log(this.allObjects);
+                break;
+            case 'o':
+                for (var i = 0; i < this.allObjects.length; i++) {
+                    console.log(!this.allObjects[i].name === 'player');
+                }
+                console.log('Is object 103 een speler?', this.allObjects[103].name === 'player');
                 break;
             default:
                 break;
@@ -139,7 +175,8 @@ var Game = (function () {
             'assets/iiilogo.png',
             'assets/press_start.png',
             'assets/o.png',
-            'assets/block.png'
+            'assets/block.png',
+            'assets/player.png'
         ])
             .load(this.setupPIXIAssetsLoaded.bind(this));
     };
@@ -150,6 +187,9 @@ var Game = (function () {
     Game.prototype.runLevel = function (level) {
         this.mainMenu.delete();
         this.addObject(new Level(this, level));
+    };
+    Game.prototype.hasOverlap = function (c1, c2) {
+        return !(c2.x > c1.x + c1.width || c2.x + c2.width < c1.x || c2.y > c1.y + c1.height || c2.y + c2.height < c1.y);
     };
     return Game;
 }());
@@ -357,11 +397,12 @@ var Level = (function (_super) {
             this.levelConstructed = true;
         }
         else if (this.num === -1) {
-            this.speed = 20;
+            this.speed = 10;
             var lengthOfLevel = 100;
             var randomY = 620;
-            for (var i = 0; i < lengthOfLevel; i++) {
-                this.addObj(new Block(this.g, i * 360 + 100, randomY, 360, 100, this.speed));
+            var blockLength = 350;
+            this.addObj(new Block(this.g, 1 * blockLength + 100, randomY, blockLength, 100, this.speed));
+            for (var i = 1; i < lengthOfLevel; i++) {
                 if (Math.round(Math.random())) {
                     if (randomY <= 20) {
                         randomY += 50;
@@ -378,8 +419,10 @@ var Level = (function (_super) {
                         randomY += 50;
                     }
                 }
+                this.addObj(new Block(this.g, i * blockLength + 100, randomY, blockLength, 720 - randomY, this.speed));
             }
-            console.log(this.levelObjects);
+            this.g.player = new Player(this.g);
+            this.g.addObject(this.g.player);
             this.levelConstructed = true;
         }
     };
@@ -453,6 +496,32 @@ var MainMenu = (function (_super) {
         this.pressStart.delete();
     };
     return MainMenu;
+}(GameObj));
+var Player = (function (_super) {
+    __extends(Player, _super);
+    function Player(g) {
+        var _this = _super.call(this, g, 'player', 50 + 50, 620 - 49 - 1000, 49 / 2, 91 / 2, 'assets/player.png') || this;
+        _this.Yspeed = 0;
+        return _this;
+    }
+    Player.prototype.collide = function () {
+        this.Yspeed = 0;
+    };
+    Player.prototype.collideUpDown = function () {
+    };
+    Player.prototype.collideRight = function () {
+    };
+    Player.prototype.jump = function () {
+        if (this.Yspeed === 0) {
+            this.Yspeed = -9.9;
+        }
+    };
+    Player.prototype.tick = function () {
+        this.y += this.Yspeed;
+        this.Yspeed += 0.5;
+        _super.prototype.tick.call(this);
+    };
+    return Player;
 }(GameObj));
 var PressStart = (function (_super) {
     __extends(PressStart, _super);

@@ -49,22 +49,25 @@ class Level extends GameObj {
       // om de game af te krijgen zou ik voor nu gewoon een score attack game maken waarbij je (gewoon optijd van poortjes moet wisselen) en springen
       this.levelConstructed = true
     } else if (this.num === -1) { //LEVEL GEN MODE ACTIVATE
-      this.speed = 20
+      this.speed = 10
 
       let lengthOfLevel = 100
       let randomY = 620
+      let blockLength = 350
 
-      for(let i: number = 0; i < lengthOfLevel; i++) {
-        this.addObj(
+      //first block is alway this one
+      this.addObj(
           new Block(
             this.g,
-            i * 360 + 100,
+            1 * blockLength + 100,
             randomY,
-            360,
+            blockLength,
             100,
             this.speed
           )
-        )
+      )
+
+      for(let i: number = 1; i < lengthOfLevel; i++) {
         // genereer het volgende block of 50 hoger, of 50 lager
         if (Math.round(Math.random())) {
           if (randomY <= 20) {
@@ -79,11 +82,25 @@ class Level extends GameObj {
             randomY += 50
           }
         }
+
+        this.addObj(
+          new Block(
+            this.g,
+            i * blockLength + 100,
+            randomY,
+            blockLength,
+            720 - randomY,
+            this.speed
+          )
+        )
       }
 
-      //this.levelObjects[this.levelObjects.length - 1].height = 720 - randomY
+      //add finish
 
-      console.log(this.levelObjects)
+      //add player
+      this.g.player = new Player(this.g)
+      this.g.addObject(this.g.player)
+
       this.levelConstructed = true
     }
   }
