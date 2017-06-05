@@ -38,6 +38,8 @@ var Game = (function () {
         this._loader = PIXI.loader;
         this._resources = PIXI.loader.resources;
         this._renderDom = renderDom;
+        this.audio = new Audio('assets/Tech_Live.mp3');
+        this.audio.play();
         window.addEventListener('keydown', function (event) { return _this.keyboardEvent(event); });
         if (!renderDom) {
             console.log('[Game] Starting game in WebGL/Canvas mode');
@@ -397,7 +399,7 @@ var Level = (function (_super) {
         }
         else if (this.num === -1) {
             this.speed = 10;
-            var lengthOfLevel = 100;
+            var lengthOfLevel = 200;
             var randomY = 620;
             var blockLength = 350;
             this.addObj(new Block(this.g, 1 * blockLength + 100, randomY, blockLength, 100, this.speed));

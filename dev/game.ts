@@ -12,6 +12,7 @@ class Game {
   private currentLevel: Level
   private _state: String
   private _player: Player
+  private audio
 
   get stage(): PIXI.Container {
     return this._stage
@@ -42,6 +43,9 @@ class Game {
 
   constructor (renderDom: boolean = true) {
     this._renderDom = renderDom
+
+    this.audio = new Audio('assets/Tech_Live.mp3')
+    this.audio.play()
 
     // Register keyboard event
     window.addEventListener('keydown', (event: KeyboardEvent) => this.keyboardEvent(event) )

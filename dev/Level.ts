@@ -50,7 +50,7 @@ class Level extends GameObj {
     } else if (this.num === -1) { //LEVEL GEN MODE ACTIVATE
       this.speed = 10
 
-      let lengthOfLevel = 100
+      let lengthOfLevel = 200
       let randomY = 620
       let blockLength = 350
 
