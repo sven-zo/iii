@@ -71,6 +71,7 @@ class Game {
       element.tick()
     })
     // Collide elements
+    // [[[ AL die comments komen omdat ik heel veel moeite had met collission >_< ]]]
     //for(let i: number = 0; i < this.allObjects.length; i++) {
     //  for(let j: number = 0; j < this.allObjects.length; j++) {
     //    if(! i === j) {
@@ -95,8 +96,8 @@ class Game {
           //console.log('HELP', this.player.y + this.player.height >= this.allObjects[i].y)
           if (this.hasOverlap(this.player, this.allObjects[i]) ) {
             this.player.collide()
-            if (this.player.x + this.player.width > this.allObjects[i].x ) {
-              console.log('boem')
+            if ( this.player.x + this.player.width > this.allObjects[i].x && this.player.y < this.allObjects[i].y ) {
+              //console.log('boem')
             }
           }
           //console.log( '?', this.hasOverlap(this.player, this.allObjects[i]) )
@@ -112,8 +113,8 @@ class Game {
   }
 
   private keyboardEvent (event: KeyboardEvent): void {
-    console.log('key pressed', event.key)
-    console.log('state', this._state)
+    //console.log('key pressed', event.key)
+    //console.log('state', this._state)
     switch (event.key) {
       case ' ':
         if (this._state === 'mainmenu') {
@@ -123,6 +124,7 @@ class Game {
         }
         break;
 
+      //Debug commands
       case 'd':
         console.log(this.allObjects)
         break;

@@ -3,7 +3,7 @@ class Player extends GameObj {
   private Yspeed: number = 0
 
   constructor (g: Game) {
-    super (g, 'player', 50+50, 620-49-1000, 49/2, 91/2, 'assets/player.png')
+    super (g, 'player', 50+50, 620-49-1000-80, 49/2, 91/2, 'assets/player.png')
   }
 
   public collide () {

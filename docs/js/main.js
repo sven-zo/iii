@@ -110,8 +110,7 @@ var Game = (function () {
                 else {
                     if (this.hasOverlap(this.player, this.allObjects[i])) {
                         this.player.collide();
-                        if (this.player.x + this.player.width > this.allObjects[i].x) {
-                            console.log('boem');
+                        if (this.player.x + this.player.width > this.allObjects[i].x && this.player.y < this.allObjects[i].y) {
                         }
                     }
                 }
@@ -123,8 +122,6 @@ var Game = (function () {
         requestAnimationFrame(this.gameLoop.bind(this));
     };
     Game.prototype.keyboardEvent = function (event) {
-        console.log('key pressed', event.key);
-        console.log('state', this._state);
         switch (event.key) {
             case ' ':
                 if (this._state === 'mainmenu') {
@@ -401,7 +398,6 @@ var Level = (function (_super) {
             var lengthOfLevel = 100;
             var randomY = 620;
             var blockLength = 350;
-            this.addObj(new Block(this.g, 1 * blockLength + 100, randomY, blockLength, 100, this.speed));
             for (var i = 1; i < lengthOfLevel; i++) {
                 if (Math.round(Math.random())) {
                     if (randomY <= 20) {
@@ -419,7 +415,8 @@ var Level = (function (_super) {
                         randomY += 50;
                     }
                 }
-                this.addObj(new Block(this.g, i * blockLength + 100, randomY, blockLength, 720 - randomY, this.speed));
+                var blockHeight = 6;
+                this.addObj(new Block(this.g, i * blockLength + 100, randomY, blockLength, blockHeight, this.speed));
             }
             this.g.player = new Player(this.g);
             this.g.addObject(this.g.player);
@@ -500,7 +497,7 @@ var MainMenu = (function (_super) {
 var Player = (function (_super) {
     __extends(Player, _super);
     function Player(g) {
-        var _this = _super.call(this, g, 'player', 50 + 50, 620 - 49 - 1000, 49 / 2, 91 / 2, 'assets/player.png') || this;
+        var _this = _super.call(this, g, 'player', 50 + 50, 620 - 49 - 1000 - 80, 49 / 2, 91 / 2, 'assets/player.png') || this;
         _this.Yspeed = 0;
         return _this;
     }
