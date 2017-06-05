@@ -56,16 +56,16 @@ class Level extends GameObj {
       let blockLength = 350
 
       //first block is alway this one
-      //this.addObj(
-      //    new Block(
-      //      this.g,
-      //      1 * blockLength + 100,
-      //      randomY,
-      //      blockLength,
-      //      100,
-      //      this.speed
-      //    )
-      //)
+      this.addObj(
+          new Block(
+            this.g,
+            1 * blockLength + 100,
+            randomY,
+            blockLength,
+            100,
+            this.speed
+          )
+      )
 
       for(let i: number = 1; i < lengthOfLevel; i++) {
         // genereer het volgende block of 50 hoger, of 50 lager

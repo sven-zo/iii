@@ -400,6 +400,7 @@ var Level = (function (_super) {
             var lengthOfLevel = 100;
             var randomY = 620;
             var blockLength = 350;
+            this.addObj(new Block(this.g, 1 * blockLength + 100, randomY, blockLength, 100, this.speed));
             for (var i = 1; i < lengthOfLevel; i++) {
                 if (Math.round(Math.random())) {
                     if (randomY <= 20) {
@@ -478,7 +479,7 @@ var DeathBlock = (function (_super) {
 var GameOver = (function (_super) {
     __extends(GameOver, _super);
     function GameOver(g) {
-        return _super.call(this, g, 'block', 0, 0, 500, 500, 'assets/gameOver.png') || this;
+        return _super.call(this, g, 'block', 0, 0, 1404, 936, 'assets/gameOver.png') || this;
     }
     return GameOver;
 }(GameObj));
