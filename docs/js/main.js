@@ -479,7 +479,10 @@ var DeathBlock = (function (_super) {
 var GameOver = (function (_super) {
     __extends(GameOver, _super);
     function GameOver(g) {
-        return _super.call(this, g, 'block', 0, 0, 1404, 936, 'assets/gameOver.png') || this;
+        var _this = _super.call(this, g, 'block', 0, 0, 1404, 936, 'assets/gameOver.png') || this;
+        _this.audio = new Audio('assets/gameover.wav');
+        _this.audio.play();
+        return _this;
     }
     return GameOver;
 }(GameObj));
@@ -523,6 +526,7 @@ var Player = (function (_super) {
     function Player(g) {
         var _this = _super.call(this, g, 'player', 50 + 50 + 50, 620 - 49 - 1000 - 80 - 80 + 800, 49 / 2, 91 / 2, 'assets/player.png') || this;
         _this.Yspeed = 0;
+        _this.audio = new Audio('assets/jump.wav');
         return _this;
     }
     Player.prototype.collide = function () {
@@ -534,6 +538,7 @@ var Player = (function (_super) {
     };
     Player.prototype.jump = function () {
         if (this.Yspeed === 0) {
+            this.audio.play();
             this.Yspeed = -9.9;
         }
     };

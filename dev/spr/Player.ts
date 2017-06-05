@@ -2,9 +2,11 @@ class Player extends GameObj {
 
   private Yspeed: number = 0
   private gameOver: GameOver
+  private audio
 
   constructor (g: Game) {
     super (g, 'player', 50+50+50, 620-49-1000-80-80+800, 49/2, 91/2, 'assets/player.png')
+    this.audio = new Audio('assets/jump.wav');
   }
 
   public collide () {
@@ -20,7 +22,8 @@ class Player extends GameObj {
   }
 
   private jump () {
-    if (this.Yspeed === 0) {
+    if (this.Yspeed === 0) { 
+      this.audio.play()
       this.Yspeed = -9.9
     }
   }
