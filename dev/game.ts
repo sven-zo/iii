@@ -10,6 +10,7 @@ class Game {
   private _resources: PIXI.loaders.ResourceDictionary = PIXI.loader.resources
   private mainMenu: MainMenu
   private currentLevel: Level
+  private _state: String
 
   get stage(): PIXI.Container {
     return this._stage
@@ -27,9 +28,17 @@ class Game {
     return this._loader
   }
 
+  set state(state: String) {
+    this._state = state
+  }
+
   constructor (renderDom: boolean = true) {
     this._renderDom = renderDom
 
+    // Register keyboard event
+    window.addEventListener('keydown', (event: KeyboardEvent) => this.keyboardEvent(event) )
+
+    // Set up renderers
     if (! renderDom) {
       console.log('[Game] Starting game in WebGL/Canvas mode')
       this.setupPIXI()
@@ -40,7 +49,7 @@ class Game {
       domrender.style.position = 'absolute'
       domrender.style.backgroundColor = 'white'
       document.body.appendChild(domrender)
-      this.addObject( new MainMenu(this) )
+      this.addObject( this.mainMenu = new MainMenu(this) )
       requestAnimationFrame( this.gameLoop.bind(this) )
     }
   }
@@ -53,6 +62,21 @@ class Game {
       this._renderer.render(this._stage)
     }
     requestAnimationFrame( this.gameLoop.bind(this) )
+  }
+
+  private keyboardEvent (event): void {
+    console.log('key pressed', event.key)
+    console.log('state', this._state)
+    switch (event.key) {
+      case ' ':
+        if (this._state === 'mainmenu') {
+          this.mainMenu.startLevel()
+        }
+        break;
+    
+      default:
+        break;
+    }
   }
 
   public addObject(obj: GameObj) {
@@ -95,6 +119,7 @@ class Game {
 
   public runLevel(level) {
     this.mainMenu.delete()
-    this.currentLevel = new Level(1)
+    //this.currentLevel = this.addObject( new Level(this, 1) )
+    this.addObject( new Level(this, level) )
   }
 }

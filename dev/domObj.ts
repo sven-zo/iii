@@ -24,6 +24,7 @@
   }
 
   public delete () {
-    document.getElementsByTagName('domrender')[0].removeChild(this.div)
+    document.getElementsByTagName('domrender')[0].removeChild(this.div)//doesnotwork
+    //document.getElementsByTagName('domrender')[0].removeChild(document.getElementsByTagName('iii-' + this.name)[0])
   }
 }

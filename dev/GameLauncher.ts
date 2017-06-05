@@ -1,5 +1,7 @@
+// [Settings]
 var forceDOM = false
 var autoStart = true
+// [Code]
 var useDOM = true
 var button = document.createElement('button')
 button.innerHTML = 'Wait...'
