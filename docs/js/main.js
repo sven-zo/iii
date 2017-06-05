@@ -480,6 +480,7 @@ var GameOver = (function (_super) {
     __extends(GameOver, _super);
     function GameOver(g) {
         var _this = _super.call(this, g, 'block', 0, 0, 1404, 936, 'assets/gameOver.png') || this;
+        _this.g.state = 'gameover';
         _this.audio = new Audio('assets/gameover.wav');
         _this.audio.play();
         return _this;
