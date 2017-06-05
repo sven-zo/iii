@@ -96,8 +96,8 @@ class Game {
           //console.log('HELP', this.player.y + this.player.height >= this.allObjects[i].y)
           if (this.hasOverlap(this.player, this.allObjects[i]) ) {
             this.player.collide()
-            if ( this.player.x + this.player.width > this.allObjects[i].x && this.player.y < this.allObjects[i].y ) {
-              //console.log('boem')
+            if ( this.allObjects[i].name === 'death-block' ) {
+              this.player.gameOverScreen()
             }
           }
           //console.log( '?', this.hasOverlap(this.player, this.allObjects[i]) )

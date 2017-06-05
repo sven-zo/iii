@@ -110,7 +110,8 @@ var Game = (function () {
                 else {
                     if (this.hasOverlap(this.player, this.allObjects[i])) {
                         this.player.collide();
-                        if (this.player.x + this.player.width > this.allObjects[i].x && this.player.y < this.allObjects[i].y) {
+                        if (this.allObjects[i].name === 'death-block') {
+                            this.player.gameOverScreen();
                         }
                     }
                 }
@@ -416,8 +417,9 @@ var Level = (function (_super) {
                         randomY += 50;
                     }
                 }
-                var blockHeight = 6;
+                var blockHeight = 720 - randomY;
                 this.addObj(new Block(this.g, i * blockLength + 100, randomY, blockLength, blockHeight, this.speed));
+                this.addObj(new DeathBlock(this.g, i * blockLength + 100, randomY + 20, blockLength, 5, this.speed));
             }
             this.g.player = new Player(this.g);
             this.g.addObject(this.g.player);
@@ -459,6 +461,19 @@ var Block = (function (_super) {
         _super.prototype.tick.call(this);
     };
     return Block;
+}(GameObj));
+var DeathBlock = (function (_super) {
+    __extends(DeathBlock, _super);
+    function DeathBlock(g, x, y, width, height, leftSpeed) {
+        return _super.call(this, g, 'death-block', x, y, width, height, 'assets/block.png') || this;
+    }
+    DeathBlock.prototype.tick = function () {
+        if (this.x < 0 - this.width) {
+            _super.prototype.delete.call(this);
+        }
+        _super.prototype.tick.call(this);
+    };
+    return DeathBlock;
 }(GameObj));
 var GameOver = (function (_super) {
     __extends(GameOver, _super);
@@ -505,7 +520,7 @@ var MainMenu = (function (_super) {
 var Player = (function (_super) {
     __extends(Player, _super);
     function Player(g) {
-        var _this = _super.call(this, g, 'player', 50 + 50, 620 - 49 - 1000 - 80 - 80, 49 / 2, 91 / 2, 'assets/player.png') || this;
+        var _this = _super.call(this, g, 'player', 50 + 50 + 50, 620 - 49 - 1000 - 80 - 80 + 800, 49 / 2, 91 / 2, 'assets/player.png') || this;
         _this.Yspeed = 0;
         return _this;
     }
@@ -519,6 +534,11 @@ var Player = (function (_super) {
     Player.prototype.jump = function () {
         if (this.Yspeed === 0) {
             this.Yspeed = -9.9;
+        }
+    };
+    Player.prototype.gameOverScreen = function () {
+        if (!this.gameOver) {
+            this.gameOver = new GameOver(this.g);
         }
     };
     Player.prototype.tick = function () {

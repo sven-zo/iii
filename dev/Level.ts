@@ -83,8 +83,8 @@ class Level extends GameObj {
           }
         }
 
-        //let blockHeight = 720 - randomY
-        let blockHeight = 6
+        let blockHeight = 720 - randomY
+        //let blockHeight = 6
 
         this.addObj(
           new Block(
@@ -93,6 +93,17 @@ class Level extends GameObj {
             randomY,
             blockLength,
             blockHeight,
+            this.speed
+          )
+        )
+
+        this.addObj(
+          new DeathBlock(
+            this.g,
+            i * blockLength + 100,
+            randomY + 20,
+            blockLength,
+            5,
             this.speed
           )
         )
