@@ -173,7 +173,8 @@ var Game = (function () {
             'assets/press_start.png',
             'assets/o.png',
             'assets/block.png',
-            'assets/player.png'
+            'assets/player.png',
+            'assets/gameOver.png'
         ])
             .load(this.setupPIXIAssetsLoaded.bind(this));
     };
@@ -459,6 +460,13 @@ var Block = (function (_super) {
     };
     return Block;
 }(GameObj));
+var GameOver = (function (_super) {
+    __extends(GameOver, _super);
+    function GameOver(g) {
+        return _super.call(this, g, 'block', 0, 0, 500, 500, 'assets/gameOver.png') || this;
+    }
+    return GameOver;
+}(GameObj));
 var Logo = (function (_super) {
     __extends(Logo, _super);
     function Logo(g) {
@@ -497,7 +505,7 @@ var MainMenu = (function (_super) {
 var Player = (function (_super) {
     __extends(Player, _super);
     function Player(g) {
-        var _this = _super.call(this, g, 'player', 50 + 50, 620 - 49 - 1000 - 80, 49 / 2, 91 / 2, 'assets/player.png') || this;
+        var _this = _super.call(this, g, 'player', 50 + 50, 620 - 49 - 1000 - 80 - 80, 49 / 2, 91 / 2, 'assets/player.png') || this;
         _this.Yspeed = 0;
         return _this;
     }
@@ -517,6 +525,11 @@ var Player = (function (_super) {
         this.y += this.Yspeed;
         this.Yspeed += 0.5;
         _super.prototype.tick.call(this);
+        if (this.y > 720) {
+            if (!this.gameOver) {
+                this.gameOver = new GameOver(this.g);
+            }
+        }
     };
     return Player;
 }(GameObj));

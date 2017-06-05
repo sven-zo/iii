@@ -171,7 +171,8 @@ class Game {
         'assets/press_start.png',
         'assets/o.png',
         'assets/block.png',
-        'assets/player.png'
+        'assets/player.png',
+        'assets/gameOver.png'
       ])
       .load(this.setupPIXIAssetsLoaded.bind(this))
   }
