@@ -16,16 +16,8 @@ class Level extends GameObj {
   }
 
   tick () {
-    //console.log('tick')
     //move items in level
     if (this.levelConstructed) {
-      //this.levelObjects.forEach(element => {
-      //  element.x = element.x - this.speed
-      //  if (element.x < 0 - element.width) {
-      //    
-      //  }
-      //})
-      //console.log(this.levelObjects)
       for (let i: number = 0; i < this.levelObjects.length; i++) {
         let element = this.levelObjects[i]
         element.x = element.x - this.speed
@@ -83,7 +75,7 @@ class Level extends GameObj {
         }
 
         let blockHeight = 720 - randomY
-        //let blockHeight = 6
+        //LINE MODE: let blockHeight = 6
 
         this.addObj(
           new Block(

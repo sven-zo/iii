@@ -1,8 +1,8 @@
 class MainMenu extends GameObj {
 
-  g: Game
-  logo: Logo
-  pressStart: PressStart
+  private g: Game
+  private logo: Logo
+  private pressStart: PressStart
 
   constructor (g) {
     super(g, 'main-menu')
