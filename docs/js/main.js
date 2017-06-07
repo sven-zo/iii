@@ -38,8 +38,8 @@ var Game = (function () {
         this._loader = PIXI.loader;
         this._resources = PIXI.loader.resources;
         this._renderDom = renderDom;
-        this.audio = new Audio('assets/Tech_Live.mp3');
-        this.audio.play();
+        this._audio = new Audio('assets/intro.mp3');
+        this._audio.play();
         window.addEventListener('keydown', function (event) { return _this.keyboardEvent(event); });
         if (!renderDom) {
             console.log('[Game] Starting game in WebGL/Canvas mode');
@@ -97,6 +97,23 @@ var Game = (function () {
         },
         set: function (player) {
             this._player = player;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Game.prototype, "audio", {
+        get: function () {
+            return this._audio;
+        },
+        set: function (audio) {
+            this._audio = audio;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Game.prototype, "renderer", {
+        get: function () {
+            return this._renderer;
         },
         enumerable: true,
         configurable: true
@@ -173,6 +190,7 @@ var Game = (function () {
         this._loader
             .add([
             'assets/iiilogo.png',
+            'assets/logo.json',
             'assets/press_start.png',
             'assets/o.png',
             'assets/block.png',
@@ -398,6 +416,9 @@ var Level = (function (_super) {
             this.levelConstructed = true;
         }
         else if (this.num === -1) {
+            this.g.audio.pause();
+            this.audio = new Audio('assets/Tech_Live.mp3');
+            this.audio.play();
             this.speed = 10;
             var lengthOfLevel = 200;
             var randomY = 620;
@@ -492,13 +513,28 @@ var GameOver = (function (_super) {
 var Logo = (function (_super) {
     __extends(Logo, _super);
     function Logo(g) {
-        return _super.call(this, g, 'logo', 0, 100, 1280 / 4, 1280 / 4, 'assets/iiilogo.png') || this;
+        var _this = _super.call(this, g, 'logo', 0, 100, 1280 / 4, 1280 / 4, 'assets/iiilogo.png') || this;
+        var frames = [];
+        for (var i = 0; i < 50; i++) {
+            var val = i < 10 ? '0' + i : i;
+            frames.push(PIXI.Texture.fromFrame('SpriteAnimation_000' + val + '.png'));
+            var anim = new PIXI.extras.AnimatedSprite(frames);
+            anim.width = 1280 / 4;
+            anim.height = 1280 / 4;
+            anim.x = 1280 / 2;
+            anim.y = 1280 / 4 - 60;
+            anim.anchor.set(0.5);
+            anim.animationSpeed = 0.5;
+            anim.play();
+            _this.g.stage.addChild(anim);
+        }
+        return _this;
     }
     Logo.prototype.tick = function () {
-        this.correctPosition();
+        this.animate();
         _super.prototype.tick.call(this);
     };
-    Logo.prototype.correctPosition = function () {
+    Logo.prototype.animate = function () {
         this.width = 1280 / 4;
         this.height = 1280 / 4;
         this.x = 1280 / 2 - this.width * 0.5;

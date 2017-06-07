@@ -5,6 +5,7 @@ class Level extends GameObj {
   public g: Game
   private levelConstructed: Boolean = false
   private speed: number
+  private audio: HTMLAudioElement
 
   constructor (g: Game, num: number) {
     super(g, 'level')
@@ -39,7 +40,15 @@ class Level extends GameObj {
       this.addObj(new Block(this.g, 100, 620, 1080, 100, this.speed))
       this.addObj(new Block(this.g, 1180, 610, 1080, 110, this.speed))
       this.levelConstructed = true
-    } else if (this.num === -1) { //LEVEL GEN MODE ACTIVATE
+    
+  
+} else if (this.num === -1) { //LEVEL GEN MODE ACTIVATE
+      //stop menu music
+      this.g.audio.pause()
+      //start level music
+      this.audio = new Audio('assets/Tech_Live.mp3')
+      this.audio.play()
+      
       this.speed = 10
 
       let lengthOfLevel = 200

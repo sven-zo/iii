@@ -12,7 +12,7 @@ class Game {
   private currentLevel: Level
   private _state: String
   private _player: Player
-  private audio
+  private _audio: HTMLAudioElement
 
   get stage(): PIXI.Container {
     return this._stage
@@ -41,11 +41,22 @@ class Game {
     this._player = player
   }
 
+  get audio() {
+    return this._audio
+  }
+  set audio(audio: HTMLAudioElement) {
+    this._audio = audio
+  }
+
+  get renderer() {
+    return this._renderer
+  }
+
   constructor (renderDom: boolean = true) {
     this._renderDom = renderDom
 
-    this.audio = new Audio('assets/Tech_Live.mp3')
-    this.audio.play()
+    this._audio = new Audio('assets/intro.mp3')
+    this._audio.play()
 
     // Register keyboard event
     window.addEventListener('keydown', (event: KeyboardEvent) => this.keyboardEvent(event) )
@@ -150,6 +161,7 @@ class Game {
       this._loader
       .add([
         'assets/iiilogo.png',
+        'assets/logo.json',
         'assets/press_start.png',
         'assets/o.png',
         'assets/block.png',
