@@ -1,7 +1,14 @@
 class SpriteObj {
 
-  private sprite: PIXI.Sprite
+  private _sprite: PIXI.Sprite
   private obj: GameObj
+
+  get sprite(): PIXI.Sprite {
+    return this._sprite
+  }
+  set sprite(sprite: PIXI.Sprite) {
+    this._sprite = sprite
+  }
 
   constructor (obj: GameObj) {
     this.obj = obj

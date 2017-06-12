@@ -4,7 +4,7 @@ class GameObj {
   private _x: number
   private _y: number
   private d: DomObj
-  private p: SpriteObj
+  private _p: SpriteObj
   private name: string
   private _width: number
   private _height: number
@@ -42,6 +42,15 @@ class GameObj {
   }
   set g(g: Game) {
     this._g = g
+  }
+  get p(): SpriteObj {
+    return this._p
+  }
+  set p(p: SpriteObj) {
+    this._p = p
+  }
+  get objName(): String {
+    return this.name
   }
 
   /**

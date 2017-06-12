@@ -14,4 +14,8 @@ class Block extends GameObj {
     super.tick()
   }
 
+  delete () {
+    this.g.stage.removeChild(this.p.sprite)
+  }
+
 }

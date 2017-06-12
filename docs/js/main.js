@@ -118,6 +118,16 @@ var Game = (function () {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(Game.prototype, "level", {
+        get: function () {
+            return this._level;
+        },
+        set: function (level) {
+            this._level = level;
+        },
+        enumerable: true,
+        configurable: true
+    });
     Game.prototype.gameLoop = function () {
         this.allObjects.forEach(function (element) {
             element.tick();
@@ -130,6 +140,7 @@ var Game = (function () {
                     if (this.hasOverlap(this.player, this.allObjects[i])) {
                         this.player.collide();
                         if (this.allObjects[i].name === 'death-block') {
+                            this.clearLevelObjects();
                             this.player.gameOverScreen();
                         }
                     }
@@ -149,6 +160,11 @@ var Game = (function () {
                 }
                 else if (this._state === 'level') {
                     this.player.jump();
+                }
+                else if (this._state === 'gameover') {
+                    this._level.deconstructLevel();
+                    this.player.removeGameOverScreen();
+                    this.mainMenu.startLevel();
                 }
                 break;
             case 'd':
@@ -205,7 +221,14 @@ var Game = (function () {
     };
     Game.prototype.runLevel = function (level) {
         this.mainMenu.delete();
-        this.addObject(new Level(this, level));
+        this.addObject(this._level = new Level(this, level));
+    };
+    Game.prototype.clearLevelObjects = function () {
+        for (var i = 0; i < this.allObjects.length; i++) {
+            if (this.allObjects[i].objName === 'block' || 'death-block') {
+                this.allObjects.splice(i--, 1);
+            }
+        }
     };
     Game.prototype.hasOverlap = function (c1, c2) {
         return !(c2.x > c1.x + c1.width || c2.x + c2.width < c1.x || c2.y > c1.y + c1.height || c2.y + c2.height < c1.y);
@@ -357,6 +380,23 @@ var GameObj = (function () {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(GameObj.prototype, "p", {
+        get: function () {
+            return this._p;
+        },
+        set: function (p) {
+            this._p = p;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(GameObj.prototype, "objName", {
+        get: function () {
+            return this.name;
+        },
+        enumerable: true,
+        configurable: true
+    });
     GameObj.prototype.createNode = function () {
         this.d = new DomObj(this.name, this);
     };
@@ -387,12 +427,20 @@ var Level = (function (_super) {
         var _this = _super.call(this, g, 'level') || this;
         _this.levelObjects = [];
         _this.levelConstructed = false;
+        _this.score = 0;
         _this.g = g;
         _this.num = num;
         _this.g.state = 'level';
         _this.constructLevel();
         return _this;
     }
+    Level.prototype.getScore = function () {
+        return this.score;
+    };
+    Level.prototype.addPoint = function () {
+        this.score += 0.5;
+        console.log(this.score - 0.5);
+    };
     Level.prototype.tick = function () {
         if (this.levelConstructed) {
             for (var i = 0; i < this.levelObjects.length; i++) {
@@ -400,6 +448,7 @@ var Level = (function (_super) {
                 element.x = element.x - this.speed;
                 if (element.x < 0 - element.width + 1) {
                     this.levelObjects.splice(i--, 1);
+                    this.addPoint();
                 }
             }
         }
@@ -407,6 +456,16 @@ var Level = (function (_super) {
     Level.prototype.addObj = function (item) {
         this.levelObjects.push(item);
         this.g.addObject(item);
+    };
+    Level.prototype.deconstructLevel = function () {
+        this.levelObjects.forEach(function (element) {
+            element.delete();
+        });
+        this.levelObjects = null;
+        this.g.clearLevelObjects();
+        this.levelConstructed = false;
+        this.audio.pause();
+        this.g.player.delete();
     };
     Level.prototype.constructLevel = function () {
         if (this.num === 1) {
@@ -420,11 +479,11 @@ var Level = (function (_super) {
             this.audio = new Audio('assets/Tech_Live.mp3');
             this.audio.play();
             this.speed = 10;
-            var lengthOfLevel = 200;
+            var lengthOfLevel = 2000;
             var randomY = 620;
             var blockLength = 350;
             this.addObj(new Block(this.g, 1 * blockLength + 100, randomY, blockLength, 100, this.speed));
-            for (var i = 1; i < lengthOfLevel; i++) {
+            for (var i = 2; i < lengthOfLevel; i++) {
                 if (Math.round(Math.random())) {
                     if (randomY <= 20) {
                         randomY += 50;
@@ -443,7 +502,7 @@ var Level = (function (_super) {
                 }
                 var blockHeight = 720 - randomY;
                 this.addObj(new Block(this.g, i * blockLength + 100, randomY, blockLength, blockHeight, this.speed));
-                this.addObj(new DeathBlock(this.g, i * blockLength + 100, randomY + 20, blockLength, 5, this.speed));
+                this.addObj(new DeathBlock(this.g, i * blockLength + 100, randomY + 15, blockLength, 5, this.speed));
             }
             this.g.player = new Player(this.g);
             this.g.addObject(this.g.player);
@@ -462,6 +521,16 @@ var SpriteObj = (function () {
         this.sprite.height = this.obj.height;
         obj.g.stage.addChild(this.sprite);
     }
+    Object.defineProperty(SpriteObj.prototype, "sprite", {
+        get: function () {
+            return this._sprite;
+        },
+        set: function (sprite) {
+            this._sprite = sprite;
+        },
+        enumerable: true,
+        configurable: true
+    });
     SpriteObj.prototype.tick = function () {
         this.sprite.width = this.obj.width;
         this.sprite.height = this.obj.height;
@@ -473,6 +542,26 @@ var SpriteObj = (function () {
     };
     return SpriteObj;
 }());
+var TextRender = (function () {
+    function TextRender(g, x, y, text) {
+        this.g = g;
+        if (this.g.renderDom) {
+        }
+        else {
+            var style = new PIXI.TextStyle({
+                align: 'left',
+                fontFamily: 'Roboto',
+                fontSize: 26
+            });
+            this.sprite = new PIXI.Text(text, style);
+            this.g.stage.addChild(this.sprite);
+        }
+    }
+    TextRender.prototype.delete = function () {
+        this.g.stage.removeChild(this.sprite);
+    };
+    return TextRender;
+}());
 var Block = (function (_super) {
     __extends(Block, _super);
     function Block(g, x, y, width, height, leftSpeed) {
@@ -483,6 +572,9 @@ var Block = (function (_super) {
             _super.prototype.delete.call(this);
         }
         _super.prototype.tick.call(this);
+    };
+    Block.prototype.delete = function () {
+        this.g.stage.removeChild(this.p.sprite);
     };
     return Block;
 }(GameObj));
@@ -497,6 +589,9 @@ var DeathBlock = (function (_super) {
         }
         _super.prototype.tick.call(this);
     };
+    DeathBlock.prototype.delete = function () {
+        this.g.stage.removeChild(this.p.sprite);
+    };
     return DeathBlock;
 }(GameObj));
 var GameOver = (function (_super) {
@@ -506,30 +601,41 @@ var GameOver = (function (_super) {
         _this.g.state = 'gameover';
         _this.audio = new Audio('assets/gameover.wav');
         _this.audio.play();
+        _this.score = new TextRender(_this.g, 100, 100, "Score: " + _this.g.level.getScore());
         return _this;
     }
+    GameOver.prototype.delete = function () {
+        console.log('remove');
+        this.g.stage.removeChild(this.p.sprite);
+        this.score.delete();
+    };
     return GameOver;
 }(GameObj));
 var Logo = (function (_super) {
     __extends(Logo, _super);
     function Logo(g) {
         var _this = _super.call(this, g, 'logo', 0, 100, 1280 / 4, 1280 / 4, 'assets/iiilogo.png') || this;
-        var frames = [];
-        for (var i = 0; i < 50; i++) {
-            var val = i < 10 ? '0' + i : i;
-            frames.push(PIXI.Texture.fromFrame('SpriteAnimation_000' + val + '.png'));
-            var anim = new PIXI.extras.AnimatedSprite(frames);
-            anim.width = 1280 / 4;
-            anim.height = 1280 / 4;
-            anim.x = 1280 / 2;
-            anim.y = 1280 / 4 - 60;
-            anim.anchor.set(0.5);
-            anim.animationSpeed = 0.5;
-            anim.play();
-            _this.g.stage.addChild(anim);
+        if (!g.renderDom) {
+            var frames_1 = [];
+            for (var i = 0; i < 50; i++) {
+                var val = i < 10 ? '0' + i : i;
+                frames_1.push(PIXI.Texture.fromFrame('SpriteAnimation_000' + val + '.png'));
+            }
+            _this.anim = new PIXI.extras.AnimatedSprite(frames_1);
+            _this.anim.width = 1280 / 4;
+            _this.anim.height = 1280 / 4;
+            _this.anim.x = 1280 / 2;
+            _this.anim.y = 1280 / 4 - 60;
+            _this.anim.anchor.set(0.5);
+            _this.anim.animationSpeed = 0.5;
+            _this.anim.play();
+            _this.g.stage.addChild(_this.anim);
         }
         return _this;
     }
+    Logo.prototype.hide = function () {
+        this.anim.visible = false;
+    };
     Logo.prototype.tick = function () {
         this.animate();
         _super.prototype.tick.call(this);
@@ -549,14 +655,20 @@ var MainMenu = (function (_super) {
         _this.g.state = 'mainmenu';
         g.addObject(_this.logo = new Logo(g));
         g.addObject(_this.pressStart = new PressStart(g));
+        _this.text = new TextRender(_this.g, 0, 0, ' v1.0.24 \n Made by @sven-zo');
         return _this;
     }
     MainMenu.prototype.startLevel = function () {
         this.g.runLevel(-1);
     };
     MainMenu.prototype.delete = function () {
+        if (!this.g.renderDom) {
+            this.logo.hide();
+        }
         this.logo.delete();
+        this.g.stage.removeChild(this.logo.anim);
         this.pressStart.delete();
+        this.text.delete();
     };
     return MainMenu;
 }(GameObj));
@@ -565,6 +677,7 @@ var Player = (function (_super) {
     function Player(g) {
         var _this = _super.call(this, g, 'player', 50 + 50 + 50, 620 - 49 - 1000 - 80 - 80 + 800, 49 / 2, 91 / 2, 'assets/player.png') || this;
         _this.Yspeed = 0;
+        _this.g = g;
         _this.audio = new Audio('assets/jump.wav');
         return _this;
     }
@@ -581,6 +694,9 @@ var Player = (function (_super) {
         if (!this.gameOver) {
             this.gameOver = new GameOver(this.g);
         }
+    };
+    Player.prototype.removeGameOverScreen = function () {
+        this.gameOver.delete();
     };
     Player.prototype.tick = function () {
         this.y += this.Yspeed;

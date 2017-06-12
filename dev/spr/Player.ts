@@ -3,9 +3,11 @@ class Player extends GameObj {
   private Yspeed: number = 0
   private gameOver: GameOver
   private audio
+  private g: Game
 
   constructor (g: Game) {
     super (g, 'player', 50+50+50, 620-49-1000-80-80+800, 49/2, 91/2, 'assets/player.png')
+    this.g = g
     this.audio = new Audio('assets/jump.wav');
   }
 
@@ -23,7 +25,12 @@ class Player extends GameObj {
   public gameOverScreen () {
     if (! this.gameOver) {
       this.gameOver = new GameOver(this.g)
+      //window.alert(this.g.level.getScore())
     }
+  }
+
+  public removeGameOverScreen () {
+    this.gameOver.delete()
   }
 
   public tick () {

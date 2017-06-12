@@ -13,6 +13,7 @@ class Game {
   private _state: String
   private _player: Player
   private _audio: HTMLAudioElement
+  private _level: Level
 
   get stage(): PIXI.Container {
     return this._stage
@@ -50,6 +51,13 @@ class Game {
 
   get renderer() {
     return this._renderer
+  }
+
+  set level(level: Level) {
+    this._level = level
+  }
+  get level(): Level {
+    return this._level
   }
 
   constructor (renderDom: boolean = true) {
@@ -93,6 +101,7 @@ class Game {
           if (this.hasOverlap(this.player, this.allObjects[i]) ) {
             this.player.collide()
             if ( this.allObjects[i].name === 'death-block' ) {
+              this.clearLevelObjects()
               this.player.gameOverScreen()
             }
           }
@@ -114,6 +123,10 @@ class Game {
           this.mainMenu.startLevel()
         } else if (this._state === 'level') {
           this.player.jump()
+        } else if (this._state === 'gameover') {
+          this._level.deconstructLevel()
+          this.player.removeGameOverScreen()
+          this.mainMenu.startLevel()
         }
         break;
 
@@ -177,7 +190,15 @@ class Game {
 
   public runLevel(level) {
     this.mainMenu.delete()
-    this.addObject( new Level(this, level) )
+    this.addObject( this._level = new Level(this, level) )
+  }
+
+  public clearLevelObjects() {
+    for(let i = 0; i < this.allObjects.length; i++) {
+      if (this.allObjects[i].objName === 'block' || 'death-block') {
+        this.allObjects.splice(i--, 1)
+      }
+    }
   }
 
   public hasOverlap(c1: GameObj, c2: GameObj): boolean {
