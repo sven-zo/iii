@@ -235,6 +235,7 @@ var Game = (function () {
     };
     return Game;
 }());
+var neverUseDOM = true;
 var forceDOM = false;
 var autoStart = true;
 var useDOM = true;
@@ -282,6 +283,11 @@ window.addEventListener('load', function (e) {
     }
     document.body.appendChild(button);
     if (autoStart) {
+        if (useDOM || forceDOM) {
+            if (neverUseDOM) {
+                new Game(useDOM);
+            }
+        }
         startGame();
     }
     else {
@@ -295,11 +301,21 @@ function startGame() {
     document.body.removeChild(webGlMessage);
     document.body.removeChild(canvasMessage);
     document.body.removeChild(domMessage);
+    if (useDOM) {
+        if (neverUseDOM) {
+            new Game(useDOM);
+        }
+    }
     if (forceDOM) {
         new Game(true);
     }
     else {
-        new Game(useDOM);
+        if (!neverUseDOM) {
+            new Game(useDOM);
+        }
+        else {
+            new Game(useDOM);
+        }
     }
 }
 var GameObj = (function () {
@@ -601,7 +617,7 @@ var GameOver = (function (_super) {
         _this.g.state = 'gameover';
         _this.audio = new Audio('assets/gameover.wav');
         _this.audio.play();
-        _this.score = new TextRender(_this.g, 100, 100, "Score: " + _this.g.level.getScore());
+        _this.score = new TextRender(_this.g, 100, 100, "Score: " + (_this.g.level.getScore() - 0.5) * 10);
         return _this;
     }
     GameOver.prototype.delete = function () {
@@ -655,7 +671,7 @@ var MainMenu = (function (_super) {
         _this.g.state = 'mainmenu';
         g.addObject(_this.logo = new Logo(g));
         g.addObject(_this.pressStart = new PressStart(g));
-        _this.text = new TextRender(_this.g, 0, 0, ' v1.0.24 \n Made by @sven-zo');
+        _this.text = new TextRender(_this.g, 0, 0, ' v1.0.25 \n Made by @sven-zo');
         return _this;
     }
     MainMenu.prototype.startLevel = function () {
@@ -677,7 +693,6 @@ var Player = (function (_super) {
     function Player(g) {
         var _this = _super.call(this, g, 'player', 50 + 50 + 50, 620 - 49 - 1000 - 80 - 80 + 800, 49 / 2, 91 / 2, 'assets/player.png') || this;
         _this.Yspeed = 0;
-        _this.g = g;
         _this.audio = new Audio('assets/jump.wav');
         return _this;
     }

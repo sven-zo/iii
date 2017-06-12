@@ -8,7 +8,7 @@ class GameOver extends GameObj {
     this.g.state = 'gameover'
     this.audio = new Audio('assets/gameover.wav')
     this.audio.play()
-    this.score = new TextRender(this.g, 100, 100, "Score: " + this.g.level.getScore())
+    this.score = new TextRender(this.g, 100, 100, "Score: " + (this.g.level.getScore() - 0.5) * 10)
   }
 
   delete () {

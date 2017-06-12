@@ -1,4 +1,5 @@
 // [Settings]
+var neverUseDOM = true
 var forceDOM = false
 var autoStart = true
 // [Code]
@@ -49,6 +50,11 @@ window.addEventListener('load', function (e) {
   }
   document.body.appendChild(button)
   if (autoStart) {
+    if (useDOM || forceDOM) {
+      if (neverUseDOM) {
+        new Game(useDOM)
+      }
+    }
     startGame()
   } else { 
     button.innerHTML = 'Start game! (You should fix these things first for an optimal experience!)'
@@ -62,9 +68,18 @@ function startGame () {
   document.body.removeChild(webGlMessage)
   document.body.removeChild(canvasMessage)
   document.body.removeChild(domMessage)
+  if (useDOM) {
+    if (neverUseDOM) {
+      new Game(useDOM)
+    }
+  }
   if (forceDOM) {
     new Game(true)
   } else {
-    new Game(useDOM)
+    if (!neverUseDOM) {
+      new Game(useDOM)
+    } else {
+      new Game(useDOM)
+    }
   }
 }
