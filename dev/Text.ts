@@ -12,7 +12,7 @@ class TextRender {
 
       let style = new PIXI.TextStyle({
         align: 'left',
-        fontFamily: 'Roboto',
+        fontFamily: 'Roboto, Tahoma, Geneva, sans-serif',
         fontSize: 26
       })
 

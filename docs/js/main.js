@@ -566,7 +566,7 @@ var TextRender = (function () {
         else {
             var style = new PIXI.TextStyle({
                 align: 'left',
-                fontFamily: 'Roboto',
+                fontFamily: 'Roboto, Tahoma, Geneva, sans-serif',
                 fontSize: 26
             });
             this.sprite = new PIXI.Text(text, style);
@@ -671,7 +671,7 @@ var MainMenu = (function (_super) {
         _this.g.state = 'mainmenu';
         g.addObject(_this.logo = new Logo(g));
         g.addObject(_this.pressStart = new PressStart(g));
-        _this.text = new TextRender(_this.g, 0, 0, ' v1.0.26 \n Made by @sven-zo');
+        _this.text = new TextRender(_this.g, 0, 0, ' v1.0.27 \n Made by @sven-zo');
         return _this;
     }
     MainMenu.prototype.startLevel = function () {
