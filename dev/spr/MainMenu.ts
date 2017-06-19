@@ -12,7 +12,7 @@ class MainMenu extends GameObj {
     g.addObject( this.logo = new Logo(g) )
     g.addObject( this.pressStart = new PressStart(g) )
 
-    this.text = new TextRender(this.g, 0, 0, ' v1.0.25 \n Made by @sven-zo')
+    this.text = new TextRender(this.g, 0, 0, ' v1.0.26 \n Made by @sven-zo')
   }
 
   public startLevel (): void {

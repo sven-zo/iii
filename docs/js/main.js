@@ -617,7 +617,7 @@ var GameOver = (function (_super) {
         _this.g.state = 'gameover';
         _this.audio = new Audio('assets/gameover.wav');
         _this.audio.play();
-        _this.score = new TextRender(_this.g, 100, 100, "Score: " + (_this.g.level.getScore() - 0.5) * 10);
+        _this.score = new TextRender(_this.g, 100, 100, "Score: " + ((_this.g.level.getScore() - 0.5) * 10));
         return _this;
     }
     GameOver.prototype.delete = function () {
