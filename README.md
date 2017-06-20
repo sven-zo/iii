@@ -3,3 +3,5 @@
 
 _i_ am a game. :video_game:
 [Click here to play](https://sven-zo.github.io/iii)
+
+[Click here to view UML](https://drive.google.com/file/d/0B4BY0-Gk5LubSTBXb25iSjNoVGM/view?usp=sharing)
