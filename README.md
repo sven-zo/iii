@@ -7,6 +7,8 @@ _i_ am a game. :video_game:
 # UML
 [Click here to view UML](https://drive.google.com/file/d/0B4BY0-Gk5LubSTBXb25iSjNoVGM/view?usp=sharing)
 
+[PDF version, if you prefer](https://drive.google.com/file/d/0B4BY0-Gk5LubRUZxWVpvbk01bVE/view?usp=sharing)
+
 # How to install locally
 1. *Clone or download* the game to your computer.
 2. Host the 'docs' folder somewhere (using XAMPP or some other tool).
