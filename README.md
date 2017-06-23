@@ -4,8 +4,13 @@
 _i_ am a game. :video_game:
 [Click here to play](https://sven-zo.github.io/iii)
 
+# UML
 [Click here to view UML](https://drive.google.com/file/d/0B4BY0-Gk5LubSTBXb25iSjNoVGM/view?usp=sharing)
 
+# How to install locally
+1. *Clone or download* the game to your computer.
+2. Host the 'docs' folder somewhere (using XAMPP or some other tool).
+3. Go to a browser *(I wouldn't recommend using Safari)* and browse to localhost/`folder you put docs in`/docs
 # Classes en instances
 Bijna elk element in de game is een class, behalve `GameLauncher.ts`. Deze maakt een instance van `Game` aan om het spel te starten. Game maakt weer een instance aan van `MainMenu`, enzovoorts.
 
